@@ -1,0 +1,1 @@
+# homebridge-api-humidity-sensor
