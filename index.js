@@ -38,9 +38,16 @@ class HumiditySensorAccessory {
 
     try {
       const response = await axios.get('http://192.168.100.4/humidity');
-      const humidity = response.data.humidity; // adjust according to the structure of your response
-      this.log.debug('Current Humidity: ' + humidity);
-      return humidity;
+      this.log.debug('Response from HTTP request:', response.data);
+
+      // Ensure the response data is a valid number
+      const humidity = parseFloat(response.data);
+      if (!isNaN(humidity)) {
+        this.log.debug('Current Humidity: ' + humidity);
+        return humidity;
+      } else {
+        throw new Error('Humidity value is not a valid number');
+      }
     } catch (error) {
       this.log.error('Error getting humidity:', error);
       throw new this.api.hap.HapStatusError(this.api.hap.HAPStatus.SERVICE_COMMUNICATION_FAILURE);
@@ -50,9 +57,16 @@ class HumiditySensorAccessory {
   async updateHumidity() {
     try {
       const response = await axios.get('http://192.168.100.4/humidity');
-      const humidity = response.data.humidity; // adjust according to the structure of your response
-      this.service.getCharacteristic(this.Characteristic.CurrentRelativeHumidity).updateValue(humidity);
-      this.log.debug('Updated Humidity: ' + humidity);
+      this.log.debug('Response from HTTP request:', response.data);
+
+      // Ensure the response data is a valid number
+      const humidity = parseFloat(response.data);
+      if (!isNaN(humidity)) {
+        this.service.getCharacteristic(this.Characteristic.CurrentRelativeHumidity).updateValue(humidity);
+        this.log.debug('Updated Humidity: ' + humidity);
+      } else {
+        this.log.error('Humidity value is not a valid number');
+      }
     } catch (error) {
       this.log.error('Error updating humidity:', error);
     }
