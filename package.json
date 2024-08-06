@@ -1,6 +1,6 @@
 {
   "name": "homebridge-humidity-sensor-api",
-  "version": "0.1",
+  "version": "0.1.0",
   "description": "Get the humidity level by calling the url.",
   "keywords": [
     "homebridge-plugin",
