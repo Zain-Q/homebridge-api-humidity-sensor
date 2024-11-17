@@ -9,13 +9,12 @@ class HumiditySensorAccessory {
   constructor(log, config, api) {
     this.log = log;
     this.config = config;
+    this.name = config.name;
     this.api = api;
+    this.humidityUrl = config.humidityUrl;
 
     this.Service = this.api.hap.Service;
     this.Characteristic = this.api.hap.Characteristic;
-
-    // extract name from config
-    this.name = config.name;
 
     // create a new Humidity Sensor service
     this.service = new this.Service.HumiditySensor(this.name);
@@ -37,7 +36,7 @@ class HumiditySensorAccessory {
     this.log.debug('Triggered GET CurrentRelativeHumidity');
 
     try {
-      const response = await axios.get('http://192.168.100.4/humidity');
+      const response = await axios.get(this.humidityUrl, { Timeout: 5000 });
       this.log.debug('Response from HTTP request:', response.data);
 
       // Ensure the response data is a valid number
@@ -56,7 +55,7 @@ class HumiditySensorAccessory {
 
   async updateHumidity() {
     try {
-      const response = await axios.get('http://192.168.100.4/humidity');
+      const response = await axios.get(this.humidityUrl, { Timeout: 5000 });
       this.log.debug('Response from HTTP request:', response.data);
 
       // Ensure the response data is a valid number
@@ -79,4 +78,3 @@ class HumiditySensorAccessory {
     return [this.service];
   }
 }
-
